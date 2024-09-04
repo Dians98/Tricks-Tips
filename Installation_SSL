@@ -33,3 +33,10 @@ server {
         include fastcgi_params;
     }
 }
+
+
+
+POUR WORDPRESS
+https://www.youtube.com/watch?v=-jPJWYUqv8c
+
+https://spinupwp.com/hosting-wordpress-yourself-setting-up-sites/
