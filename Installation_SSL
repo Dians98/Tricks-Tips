@@ -1,0 +1,35 @@
+sudo certbot --nginx -d serverName
+
+Normalement certbot va faire automatiquement la configuration
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name moneykiosk.net www.moneykiosk.net picardtest.moneykiosk.net picard.moneykiosk.net totalfr.moneykiosk.net thomeurope.moneykiosk.net;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name serverName;
+
+    ssl_certificate /etc/letsencrypt/live/serverName/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/serverName/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    root /var/www/serverName;
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php5.6-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}
